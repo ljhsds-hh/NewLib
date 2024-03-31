@@ -48,6 +48,7 @@ namespace LibrarySystemForClient.Ljh.Windows
                     {
                         bookInfo = new BookInfo();
                     }
+                    
                     mainFrame.Content = bookInfo;
                 }
                 if (styleButton.Name.Equals("MenuFour"))
@@ -56,6 +57,7 @@ namespace LibrarySystemForClient.Ljh.Windows
                     {
                         borrowInfo = new BorrowInfo();
                     }
+                    borrowInfo.InitDataGrid(1, 12);
                     mainFrame.Content = borrowInfo;
                 }
 

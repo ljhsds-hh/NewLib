@@ -34,19 +34,38 @@ namespace LibrarySystemForClient.Ljh.Pages
 
         private void ReturnBook_Click(object sender, RoutedEventArgs e)
         {
-            
+            var Button = (Button)sender as Button;
+            var dataContent = Button.DataContext as Borrow;
+            MessageBoxResult IsReturn = MessageBox.Show("您确定要归还图书吗", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+            if (IsReturn == MessageBoxResult.OK)
+            {
+                bool ReturnRes = ReturnBookUtil.IsSuccessReturnBook(dataContent.BookId);
+                if (ReturnRes)
+                {
+                    MessageBoxResult result = MessageBox.Show("您已成功还书！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.OK || result == MessageBoxResult.Cancel || result == MessageBoxResult.No)
+                    {
+                        //获取已经显示的页面
+                        MainBook CurrentWindows = Application.Current.Windows.OfType<MainBook>().FirstOrDefault();
+                        if (CurrentWindows.mainFrame.Content is ReturnInfo returnInfo)
+                        {
+                            returnInfo.InitDataGrid(1, 12);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("还书失败", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                }
+            }
         }
 
         private void ReborrowBook_Click(object sender, RoutedEventArgs e)
         {
-            // 1.查看是否有逾期
-            // 2.修改借书表
-            // 3.修改图书表
-
             var button = (Button)sender;
             var dataContext = button.DataContext as Borrow;
             
-            // 1.
+            
             if (!BorrowBookUtil.IsOverdueReturnBook())
             {
                 BookInfoWindow bookInfoWindow = new BookInfoWindow();

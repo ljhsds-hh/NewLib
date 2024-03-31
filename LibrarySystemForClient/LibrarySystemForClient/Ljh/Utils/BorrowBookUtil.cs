@@ -56,7 +56,10 @@ namespace LibrarySystemForClient.Ljh.Utils
             bookWindow.BookAuthor.Text = bookInfo[0].BookAuthor;
             bookWindow.BookType.Text = bookInfo[0].BookType;
             bookWindow.BookLocation.Text = bookInfo[0].BookLocation;
-            bookWindow.BookPhoto.Source = OtherUtil.GetBlobPhoto(bookInfo[0].BookPhoto);
+            if (bookInfo[0].BookPhoto != null && bookInfo[0].BookPhoto.Length != 0)
+            {
+                bookWindow.BookPhoto.Source = OtherUtil.GetBlobPhoto(bookInfo[0].BookPhoto);   
+            }
             DateTime PredictReturnBookTime = DateTime.Now;
             DateTime.TryParse(borrow.PredictReturnBookTime, out PredictReturnBookTime);
             bookWindow.BorrowTime.SelectedDate = PredictReturnBookTime.AddDays(30);
@@ -71,7 +74,10 @@ namespace LibrarySystemForClient.Ljh.Utils
             bookWindow.BookAuthor.Text = book.BookAuthor;
             bookWindow.BookType.Text = book.BookType;
             bookWindow.BookLocation.Text = book.BookLocation;
-            bookWindow.BookPhoto.Source = OtherUtil.GetBlobPhoto(book.BookPhoto);
+            if (book.BookPhoto != null && book.BookPhoto.Length!=0)
+            {
+                bookWindow.BookPhoto.Source = OtherUtil.GetBlobPhoto(book.BookPhoto);
+            }
             DateTime NowTime = DateTime.Now;
             bookWindow.BorrowTime.SelectedDate = NowTime.AddDays(30);
         }

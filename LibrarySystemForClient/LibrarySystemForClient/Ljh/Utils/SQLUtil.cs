@@ -18,18 +18,19 @@ namespace LibrarySystemForClient.Ljh.Utils
                 string ConString = "Server=localhost;Database=librarysystem;uid=root;pwd=20020516;";
                 Msc = new MySqlConnection(ConString);
                 Msc.Open();
-                
-            }catch(Exception e)
+
+            }
+            catch (Exception e)
             {
-                throw new Exception("\n【在SQLUtil的 ConnectionMySQL 中出现错误(获取MySQL连接失败)】：\n"+e.Message);
+                throw new Exception("\n【在SQLUtil的 ConnectionMySQL 中出现错误(获取MySQL连接失败)】：\n" + e.Message);
             }
             return Msc;
         }
 
-        public static List<Borrow> SelectAllBorrowInfoByPage(int PageNum, int PageSize,string Condition)
+        public static List<Borrow> SelectAllBorrowInfoByPage(int PageNum, int PageSize, string Condition)
         {
             List<Borrow> borrowInfo = new List<Borrow>();
-            MySqlConnection Msc =null;
+            MySqlConnection Msc = null;
             MySqlCommand Mcd = null;
             string SelectAllBorrowInfoByPageSQL = "";
             if (Condition == null)
@@ -38,7 +39,7 @@ namespace LibrarySystemForClient.Ljh.Utils
             }
             else
             {
-                SelectAllBorrowInfoByPageSQL = getConditionSelectSQLString(Condition,"Borrow");
+                SelectAllBorrowInfoByPageSQL = getConditionSelectSQLString(Condition, "Borrow");
             }
             try
             {
@@ -80,7 +81,8 @@ namespace LibrarySystemForClient.Ljh.Utils
                     borrow.ReborrowDay = reader.GetInt32(7);
                     borrowInfo.Add(borrow);
                 }
-            }catch(MySqlException e)
+            }
+            catch (MySqlException e)
             {
                 throw new Exception("\n【SQLUtil的 SelectAllBorrowInfoByPage 出现异常（无条件分页查询borrow表信息SQL出错）】：\n" + e);
             }
@@ -160,7 +162,13 @@ namespace LibrarySystemForClient.Ljh.Utils
                     book.BookLocation = reader.GetString(6);
                     book.BookPrice = reader.GetDecimal(7);
                     book.PageNum = reader.GetInt32(8);
-                    book.BookPhoto = (byte[])reader["bi_cover_picture"];
+                    object data = reader.GetValue(9);
+                    byte[] datas = data as byte[];
+                    if (datas!=null && datas.Length != 0)
+                    {
+                        book.BookPhoto = (byte[])reader["bi_cover_picture"];
+                    }
+
                     bookInfo.Add(book);
                 }
             }
@@ -191,7 +199,12 @@ namespace LibrarySystemForClient.Ljh.Utils
 
                 while (reader.Read())
                 {
-                    Photo = (byte[])reader["bi_cover_picture"];
+                    object data = reader.GetValue(0);
+                    byte[] datas = data as byte[];
+                    if (datas != null && datas.Length != 0)
+                    {
+                        Photo = (byte[])reader["bi_cover_picture"];
+                    }
                 }
             }
             catch (MySqlException e)
@@ -209,7 +222,7 @@ namespace LibrarySystemForClient.Ljh.Utils
             return Photo;
         }
 
-        private static string getConditionSelectSQLString(string Condition,string TableName)
+        private static string getConditionSelectSQLString(string Condition, string TableName)
         {
 
             return "";
@@ -245,10 +258,11 @@ namespace LibrarySystemForClient.Ljh.Utils
         {
             int res = 0;
             MySqlConnection Msc = null;
-            try {
-            Msc = ConnectionMySQL();
-            MySqlCommand MC = new MySqlCommand(sql, Msc);
-            res = Convert.ToInt32(MC.ExecuteScalar());
+            try
+            {
+                Msc = ConnectionMySQL();
+                MySqlCommand MC = new MySqlCommand(sql, Msc);
+                res = Convert.ToInt32(MC.ExecuteScalar());
             }
             catch (MySqlException e)
             {
@@ -260,9 +274,9 @@ namespace LibrarySystemForClient.Ljh.Utils
                 {
                     Msc.Close();
                 }
-                
+
             }
-            
+
             return res;
         }
 
@@ -277,7 +291,7 @@ namespace LibrarySystemForClient.Ljh.Utils
                 MySqlDataReader reader = Mcd.ExecuteReader();
                 while (reader.Read())
                 {
-                    res = reader.GetDateTime(0)+","+reader.GetInt32(1);
+                    res = reader.GetDateTime(0) + "," + reader.GetInt32(1);
                 }
             }
             catch (MySqlException e)
@@ -306,7 +320,7 @@ namespace LibrarySystemForClient.Ljh.Utils
             {
                 Msc = ConnectionMySQL();
                 MySqlCommand MC = new MySqlCommand(Sql, Msc);
-                res = Convert.ToInt32(MC.ExecuteScalar())>=1;
+                res = Convert.ToInt32(MC.ExecuteScalar()) >= 1;
             }
             catch (MySqlException e)
             {

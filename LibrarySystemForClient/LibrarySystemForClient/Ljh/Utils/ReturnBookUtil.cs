@@ -80,5 +80,23 @@ namespace LibrarySystemForClient.Ljh.Utils
             OldDateTime = null;
             ReborrowDays = 0;
         }
+
+        public static bool IsSuccessReturnBook(int bookId)
+        {
+            string UpdateBorrowSQLString = "update ls_borrow set bb_real_returntime = '" + DateTime.Now + "'where bi_id = " + bookId + " and r_id = " + Properties.Settings.Default.RoleId + " and bb_real_returntime is null;";
+            int UpdateBorrowRes = SQLUtil.NoQuerySQL(UpdateBorrowSQLString);
+            if (UpdateBorrowRes == 1)
+            {
+                string UpdateBookSQLString = "update ls_bookinfo set bi_num = bi_num + 1 where bi_id = " + bookId + " ;";
+                int UpdateBookRes = SQLUtil.NoQuerySQL(UpdateBookSQLString);
+                if (UpdateBookRes == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
+
+
 }
