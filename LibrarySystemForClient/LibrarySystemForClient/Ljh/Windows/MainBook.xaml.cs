@@ -1,4 +1,4 @@
-﻿using LibrarySystemForClient.Ljh.Pages;
+using LibrarySystemForClient.Ljh.Pages;
 using LibrarySystemForClient.Ljh.Utils;
 using System;
 using System.Collections.Generic;
@@ -27,11 +27,14 @@ namespace LibrarySystemForClient.Ljh.Windows
         private BorrowInfo borrowInfo;
         private ReturnInfo returnInfo;
         private ManageBookInfo manageBookInfo;
+
+
         public MainBook()
         {
             InitializeComponent();
             bookInfo = new BookInfo();
             mainFrame.Content = bookInfo;
+            DeleteAll.Visibility = Visibility.Hidden;
             styleButton = MenuOne;
         }
 
@@ -49,7 +52,7 @@ namespace LibrarySystemForClient.Ljh.Windows
                     {
                         bookInfo = new BookInfo();
                     }
-                    
+                    DeleteAll.Visibility = Visibility.Hidden;
                     mainFrame.Content = bookInfo;
                 }
                 if (styleButton.Name.Equals("MenuTwo"))
@@ -58,7 +61,7 @@ namespace LibrarySystemForClient.Ljh.Windows
                     {
                         manageBookInfo = new ManageBookInfo();
                     }
-
+                    DeleteAll.Visibility = Visibility.Visible;
                     mainFrame.Content = manageBookInfo;
                 }
                 if (styleButton.Name.Equals("MenuFour"))
@@ -67,6 +70,7 @@ namespace LibrarySystemForClient.Ljh.Windows
                     {
                         borrowInfo = new BorrowInfo();
                     }
+                    DeleteAll.Visibility = Visibility.Hidden;
                     borrowInfo.InitDataGrid(1, 12);
                     mainFrame.Content = borrowInfo;
                 }
@@ -77,6 +81,7 @@ namespace LibrarySystemForClient.Ljh.Windows
                     {
                         returnInfo = new ReturnInfo();
                     }
+                    DeleteAll.Visibility = Visibility.Hidden;
                     returnInfo.InitDataGrid(1,12);
                     mainFrame.Content = returnInfo;
                 }
@@ -84,5 +89,41 @@ namespace LibrarySystemForClient.Ljh.Windows
 
 
         }
+
+        private void DeleteAll_Click(object sender, RoutedEventArgs e)
+        {
+            int deleteNum = manageBookInfo.CheckTrueNum;
+            if (deleteNum == 0)
+            {
+                MessageBox.Show("您未选择任何数据无法删除！！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+            }
+            else
+            {
+                List<int> deleteList;
+                if (deleteNum == manageBookInfo.manageBookViewModels.Count)
+                {
+                    MessageBoxResult resultAll = MessageBox.Show("您确定要删除所有数据吗？？", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    //|| result == MessageBoxResult.Cancel || result == MessageBoxResult.No
+                    if (resultAll == MessageBoxResult.OK)
+                    {
+                        deleteList = manageBookInfo.manageBookViewModels.Select(item => item.Id).ToList();
+                        SQLUtil.DeleteInfoByIdsAndTableName("ls_bookinfo", deleteList);
+                    }
+                }
+                else
+                {
+                    deleteList = manageBookInfo.manageBookViewModels.Where(item => item.CheckBoxValue == true).Select(item => item.Id).ToList();
+                    string deleteString = OtherUtil.GetAddString(deleteList);
+                    MessageBoxResult resultList = MessageBox.Show("您确定要删除Id为：" + deleteString + " 的数据吗？？", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    //|| result == MessageBoxResult.Cancel || result == MessageBoxResult.No
+                    if (resultList == MessageBoxResult.OK)
+                    {
+                        SQLUtil.DeleteInfoByIdsAndTableName("ls_bookinfo", deleteList);
+                    }
+                }
+                manageBookInfo.InitDataGrid(1, 12);
+            }
+        }
+
     }
 }
