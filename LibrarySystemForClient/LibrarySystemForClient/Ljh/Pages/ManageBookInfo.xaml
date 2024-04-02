@@ -18,6 +18,7 @@
 
         <Grid Grid.Row="0">
             <DataGrid
+                
                 x:Name="ManageBookInfoDataGrid"
                 Width="1050"
                 Height="540"
@@ -25,6 +26,7 @@
                 CanUserAddRows="False"
                 CanUserSortColumns="True"
                 IsReadOnly="True">
+                <!--ItemSource="{Bing manageBookViewModels}"-->
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="50" CanUserResize="False">
                         <DataGridTemplateColumn.Header>
@@ -32,67 +34,59 @@
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="CheckBox" Click="CheckBox_Click" IsChecked="{Binding CheckBoxValue}" />
+                                <Grid>
+                                    <TextBlock Width="0" Text="{Binding Index}"/>
+                                    <CheckBox x:Name="CheckBox" Click="CheckBox_Click"  IsChecked="{Binding CheckBoxValue,Mode=TwoWay}" />
+                                </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    
                     <DataGridTextColumn
-                        Width="80"
+                        Width="55"
                         Binding="{Binding Id}"
                         Header="编号" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="85"
                         Binding="{Binding BookName}"
                         Header="书籍名称" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="85"
                         Binding="{Binding BookTypeId}"
                         Header="书籍类型" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="85"
                         Binding="{Binding BookPress}"
                         Header="出版社" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="85"
                         Binding="{Binding BookISBN}"
                         Header="ISBN" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="85"
                         Binding="{Binding BookAuthor}"
                         Header="作者" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="85"
                         Binding="{Binding BookLocation}"
                         Header="存放位置" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="55"
                         Binding="{Binding BookPrice}"
                         Header="价格" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="55"
                         Binding="{Binding PageNum}"
                         Header="页数" />
                     <DataGridTextColumn
-                        Width="80"
+                        Width="95"
                         Binding="{Binding BookAddTime}"
                         Header="入库时间" />
                     <DataGridTextColumn
-                        Width="60"
+                        Width="55"
                         Binding="{Binding BookNum}"
                         Header="数量" />
-
-
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.Header>
-                            <TextBlock Text="BookPhoto" Visibility="Collapsed" />
-                        </DataGridTemplateColumn.Header>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding BookPhoto}" Visibility="Collapsed" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="180" Header="操作">
+                    <DataGridTemplateColumn Width="150" Header="操作">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -102,14 +96,14 @@
                                     </Grid.ColumnDefinitions>
                                     <Button
                                         Grid.Column="0"
-                                        Width="70"
+                                        Width="60"
                                         Background="Red"
                                         Click="Delete_Click">
                                         删除
                                     </Button>
                                     <Button
                                         Grid.Column="1"
-                                        Width="70"
+                                        Width="60"
                                         Background="Green"
                                         Click="Update_Click">
                                         修改
