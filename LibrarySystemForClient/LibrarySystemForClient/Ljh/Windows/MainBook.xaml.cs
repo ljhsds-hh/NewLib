@@ -128,7 +128,8 @@ namespace LibrarySystemForClient.Ljh.Windows
 
         private void SourceAllInfo_Click(object sender, RoutedEventArgs e)
         {
-
+            string valueOne = TextOne.Text;
+            string valueTwo = TextTwo.Text;
         }
     }
 }
