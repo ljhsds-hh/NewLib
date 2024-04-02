@@ -1,4 +1,4 @@
-﻿using LibrarySystemForClient.Ljh.Model;
+using LibrarySystemForClient.Ljh.Model;
 using LibrarySystemForClient.Ljh.Utils;
 using LibrarySystemForClient.Ljh.Windows;
 using System;
@@ -33,26 +33,29 @@ namespace LibrarySystemForClient.Ljh.Pages
         {
             var button = (Button)sender;
             var dataContext = button.DataContext as Book;
-            if (!BorrowBookUtil.IsOverdueReturnBook())
-            {
-                if (SQLUtil.IsBorrowThisBook(dataContext.Id))
+           
+                if (!BorrowBookUtil.IsOverdueReturnBook())
                 {
-                    MessageBoxResult result = MessageBox.Show(
-            "您已借过该书！！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (SQLUtil.IsBorrowThisBook(dataContext.Id))
+                    {
+                        MessageBoxResult result = MessageBox.Show(
+                "您已借过该书！！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        BookInfoWindow bookInfoWindow = new BookInfoWindow();
+                        BorrowBookUtil.SetBookInfoValue(dataContext, bookInfoWindow);
+                        bookInfoWindow.Visibility = Visibility.Visible;
+                    }
+
                 }
                 else
                 {
-                    BookInfoWindow bookInfoWindow = new BookInfoWindow();
-                    BorrowBookUtil.SetBookInfoValue(dataContext, bookInfoWindow);
-                    bookInfoWindow.Visibility = Visibility.Visible;
+                    MessageBoxResult result = MessageBox.Show(
+                 "您有未归还图书，无法借书", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                 }
-
-            }
-            else
-            {
-                MessageBoxResult result = MessageBox.Show(
-             "您有未归还图书，无法借书", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-            }
+           
+            
 
         }
 
