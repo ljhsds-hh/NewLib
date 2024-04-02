@@ -125,5 +125,10 @@ namespace LibrarySystemForClient.Ljh.Windows
             }
         }
 
+
+        private void SourceAllInfo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
