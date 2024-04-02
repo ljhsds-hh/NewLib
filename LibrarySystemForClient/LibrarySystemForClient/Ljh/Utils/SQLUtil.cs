@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibrarySystemForClient.Ljh.Model;
-using LibrarySystemForClient.Ljh.ViewModel;
 using MySql.Data.MySqlClient;
+using LibrarySystemForClient.Ljh.ViewModel;
+using System.Windows;
 
 namespace LibrarySystemForClient.Ljh.Utils
 {
@@ -113,7 +114,7 @@ namespace LibrarySystemForClient.Ljh.Utils
                 {
                     Book book = new Book();
                     book.Id = reader.GetInt32(0);
-                    book.BookName = reader.GetString(1);
+                    book.BookName = reader.GetString(reader.GetOrdinal("bi_id"));
                     book.BookType = reader.GetString(2);
                     book.BookPress = reader.GetString(3);
                     book.BookISBN = reader.GetString(4);
@@ -140,55 +141,15 @@ namespace LibrarySystemForClient.Ljh.Utils
             return bookInfo;
         }
 
-        public static List<ManageBookViewModel> SelectManageBookViewModelByPage(string sql)
+        public static void DeleteInfoByIdsAndTableName(string tableName, List<int> deleteList)
         {
-            List<ManageBookViewModel> manageBookViewModels = new List<ManageBookViewModel>();
-            MySqlConnection Msc = null;
-            MySqlCommand Mcd = null;
-            try
-            {
-                Msc = ConnectionMySQL();
-                Mcd = new MySqlCommand(sql, Msc);
-                MySqlDataReader reader = Mcd.ExecuteReader();
 
-                while (reader.Read())
-                {
-                    ManageBookViewModel manageBookViewModel = new ManageBookViewModel();
-                    manageBookViewModel.CheckBoxValue = false;
-                    manageBookViewModel.Id = reader.GetInt32(0);
-                    manageBookViewModel.BookName = reader.GetString(1);
-                    manageBookViewModel.BookTypeId = reader.GetInt32(2);
-                    manageBookViewModel.BookPress = reader.GetString(3);
-                    manageBookViewModel.BookISBN = reader.GetString(4);
-                    manageBookViewModel.BookAuthor = reader.GetString(5);
-                    manageBookViewModel.BookLocation = reader.GetString(6);
-                    manageBookViewModel.BookPrice = reader.GetDecimal(7);
-                    manageBookViewModel.PageNum = reader.GetInt32(8);
-                    manageBookViewModel.BookAddTime = reader.GetDateTime(9).ToString("yyyy-MM-dd HH:mm:ss");
-                    manageBookViewModel.BookNum = reader.GetInt32(10);
-                    object data = reader.GetValue(11);
-                    byte[] datas = data as byte[];
-                    if (datas != null && datas.Length != 0)
-                    {
-                        manageBookViewModel.BookPhoto = (byte[])reader["bi_cover_picture"];
-                    }
-                    manageBookViewModels.Add(manageBookViewModel);
-
-                }
-            }
-            catch (MySqlException e)
+            string sql = "delete from " + tableName + " where bi_id in " + OtherUtil.GetAddString(deleteList) + ";";
+            int DeleteRes = NoQuerySQL(sql);
+            if (DeleteRes != 0)
             {
-                throw new Exception("\n【SQLUtil的 SelectManageBookViewModelByPage 出现异常（查询book(图书管理)表信息SQL出错）】：\n" + e);
+                MessageBox.Show("删除成功！！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
             }
-            finally
-            {
-                if (Msc != null)
-                {
-                    Msc.Close();
-                }
-            }
-
-            return manageBookViewModels;
         }
 
         public static List<Book> SelectBookInfoSQL(string sql)
@@ -216,7 +177,7 @@ namespace LibrarySystemForClient.Ljh.Utils
                     book.PageNum = reader.GetInt32(8);
                     object data = reader.GetValue(9);
                     byte[] datas = data as byte[];
-                    if (datas!=null && datas.Length != 0)
+                    if (datas != null && datas.Length != 0)
                     {
                         book.BookPhoto = (byte[])reader["bi_cover_picture"];
                     }
@@ -237,6 +198,59 @@ namespace LibrarySystemForClient.Ljh.Utils
             }
 
             return bookInfo;
+        }
+
+        public static List<ManageBookViewModel> SelectManageBookViewModelByPage(string sql)
+        {
+            List<ManageBookViewModel> manageBookViewModels = new List<ManageBookViewModel>();
+            MySqlConnection Msc = null;
+            MySqlCommand Mcd = null;
+            try
+            {
+                Msc = ConnectionMySQL();
+                Mcd = new MySqlCommand(sql, Msc);
+                MySqlDataReader reader = Mcd.ExecuteReader();
+                int i = 0;
+                while (reader.Read())
+                {
+                    ManageBookViewModel manageBookViewModel = new ManageBookViewModel();
+                    manageBookViewModel.Index = i;
+                    i++;
+                    manageBookViewModel.CheckBoxValue = false;
+                    manageBookViewModel.Id = reader.GetInt32(0);
+                    manageBookViewModel.BookName = reader.GetString(1);
+                    manageBookViewModel.BookTypeId = reader.GetInt32(2);
+                    manageBookViewModel.BookPress = reader.GetString(3);
+                    manageBookViewModel.BookISBN = reader.GetString(4);
+                    manageBookViewModel.BookAuthor = reader.GetString(5);
+                    manageBookViewModel.BookLocation = reader.GetString(6);
+                    manageBookViewModel.BookPrice = reader.GetDecimal(7);
+                    manageBookViewModel.PageNum = reader.GetInt32(8);
+                    manageBookViewModel.BookAddTime = reader.GetDateTime(9).ToString("yyyy-MM-dd");
+                    manageBookViewModel.BookNum = reader.GetInt32(10);
+                    object data = reader.GetValue(11);
+                    byte[] datas = data as byte[];
+                    if (datas != null && datas.Length != 0)
+                    {
+                        manageBookViewModel.BookPhoto = (byte[])reader["bi_cover_picture"];
+                    }
+                    manageBookViewModels.Add(manageBookViewModel);
+
+                }
+            }
+            catch (MySqlException e)
+            {
+                throw new Exception("\n【SQLUtil的 SelectManageBookViewModelByPage 出现异常（查询book(图书管理)表信息SQL出错）】：\n" + e);
+            }
+            finally
+            {
+                if (Msc != null)
+                {
+                    Msc.Close();
+                }
+            }
+
+            return manageBookViewModels;
         }
         public static byte[] SelectBookPhotoSQL(string sql)
         {
@@ -377,6 +391,37 @@ namespace LibrarySystemForClient.Ljh.Utils
             catch (MySqlException e)
             {
                 throw new Exception("\n【SQLUtil的 CountSQL 出现异常（count聚合函数SQL出错）】：\n" + e);
+            }
+            finally
+            {
+                if (Msc != null)
+                {
+                    Msc.Close();
+                }
+
+            }
+
+            return res;
+        }
+
+
+        public static int SelectIntType(string sql)
+        {
+            int res = 0;
+            MySqlConnection Msc = null;
+            try
+            {
+                Msc = ConnectionMySQL();
+                MySqlCommand Mcd = new MySqlCommand(sql, Msc);
+                MySqlDataReader reader = Mcd.ExecuteReader();
+                while (reader.Read())
+                {
+                    res = reader.GetInt32(0);
+                }
+            }
+            catch (MySqlException e)
+            {
+                throw new Exception("\n【SQLUtil的 IsBorrowThisBook 出现异常（查询单个int型数据出错）】：\n" + e);
             }
             finally
             {
