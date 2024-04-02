@@ -1,4 +1,4 @@
-﻿using LibrarySystemForClient.Ljh.Model;
+using LibrarySystemForClient.Ljh.Model;
 using LibrarySystemForClient.Ljh.Pages;
 using LibrarySystemForClient.Ljh.Windows;
 using System;
