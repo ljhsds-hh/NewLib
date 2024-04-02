@@ -18,6 +18,7 @@ namespace LibrarySystemForClient.Ljh.ViewModel
         {
             _manageBook = new ManageBook()
             {
+                Index = 0,
                 CheckBoxValue = false,
                 Id = 0,
                 BookName = "",
@@ -33,16 +34,24 @@ namespace LibrarySystemForClient.Ljh.ViewModel
                 BookPhoto = null
             };
         }
+
+        public int Index
+        {
+            get { return _manageBook.Index; }
+            set { _manageBook.Index = value; RaisePropertyChanged("Index"); }
+        }
         public bool CheckBoxValue
         {
             get { return _manageBook.CheckBoxValue; }
             set { _manageBook.CheckBoxValue = value; RaisePropertyChanged("CheckBoxValue"); }
         }
-        public int Id {
+        public int Id
+        {
             get { return _manageBook.Id; }
             set { _manageBook.Id = value; RaisePropertyChanged("Id"); }
         }
-        public string BookName {
+        public string BookName
+        {
             get { return _manageBook.BookName; }
             set { _manageBook.BookName = value; RaisePropertyChanged("BookName"); }
         }
@@ -66,7 +75,8 @@ namespace LibrarySystemForClient.Ljh.ViewModel
             get { return _manageBook.BookAuthor; }
             set { _manageBook.BookAuthor = value; RaisePropertyChanged("BookAuthor"); }
         }
-        public string BookLocation {
+        public string BookLocation
+        {
             get { return _manageBook.BookLocation; }
             set { _manageBook.BookLocation = value; RaisePropertyChanged("BookLocation"); }
         }
@@ -75,7 +85,8 @@ namespace LibrarySystemForClient.Ljh.ViewModel
             get { return _manageBook.BookPrice; }
             set { _manageBook.BookPrice = value; RaisePropertyChanged("BookPrice"); }
         }
-        public int PageNum {
+        public int PageNum
+        {
             get { return _manageBook.PageNum; }
             set { _manageBook.PageNum = value; RaisePropertyChanged("PageNum"); }
         }
@@ -100,11 +111,12 @@ namespace LibrarySystemForClient.Ljh.ViewModel
         //属性更改方法 （页面试试更新数据） 必须设置2
         private void RaisePropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            //PropertyChangedEventHandler handler = PropertyChanged;
+            //if (handler != null)
+            //{
+            //    handler(this, new PropertyChangedEventArgs(propertyName));
+            //}
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
     }
