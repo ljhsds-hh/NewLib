@@ -8,6 +8,7 @@ namespace LibrarySystemForClient.Ljh.Model
 {
     public class ManageBook
     {
+        public int Index { get; set; }
         public bool CheckBoxValue { get; set; }
         public int Id { get; set; }
         public string BookName { get; set; }
