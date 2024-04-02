@@ -37,18 +37,22 @@
                             <materialDesign:PackIcon Kind="DeleteForever" Height="30" Width="30" />
                         </Button>
                         <TextBox
+                        x:Name="TextOne"
                         Width="200"
                         Margin="128,0,0,0"
                         VerticalAlignment="Center"
                         materialDesign:HintAssist.Hint="请输入图书名称"
-                        Text="" />
+                        />
                         <TextBox
+                            x:Name="TextTwo"
                         Width="200"
                         Margin="50,0,30,0"
                         VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="请输入图书出版社"
-                        Text="" />
+                        materialDesign:HintAssist.Hint="请输入图书ISB码"
+                        />
                         <Button
+                            x:Name="SourceAllInfo"
+                            Click="SourceAllInfo_Click"
                         Margin="20,0,0,0"
                         Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                         ToolTip="MaterialDesignFloatingActionMiniAccentButton">
