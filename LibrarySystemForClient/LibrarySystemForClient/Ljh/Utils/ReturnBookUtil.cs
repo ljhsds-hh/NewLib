@@ -1,4 +1,4 @@
-﻿using LibrarySystemForClient.Ljh.Pages;
+using LibrarySystemForClient.Ljh.Pages;
 using LibrarySystemForClient.Ljh.Windows;
 using System;
 using System.Collections.Generic;
@@ -79,6 +79,27 @@ namespace LibrarySystemForClient.Ljh.Utils
 
             OldDateTime = null;
             ReborrowDays = 0;
+        }
+
+        public static void HandlePunishTable()
+        {
+            string CountPunishByRoleIdSQLString = "select count(p_id) from ls_punish where r_id = " + Properties.Settings.Default.RoleId + ";";
+            int count = SQLUtil.CountSQL(CountPunishByRoleIdSQLString);
+            if (count != 0)
+            {
+                string SelectPunishByRoleIdSQLString = "select u_bookcount from ls_punish where r_id = " + Properties.Settings.Default.RoleId + ";";
+                int selectRes = SQLUtil.SelectIntType(SelectPunishByRoleIdSQLString);
+                string HandlePunishByRoleIdSQLString = "";
+                if (selectRes > 1)
+                {
+                    HandlePunishByRoleIdSQLString = "update ls_punish set u_bookcount = "+(selectRes-1)+ "where r_id = " + Properties.Settings.Default.RoleId + ";";
+                }
+                else
+                {
+                    HandlePunishByRoleIdSQLString = "delete from ls_punish where r_id = " + Properties.Settings.Default.RoleId + ";";
+                }
+                SQLUtil.NoQuerySQL(HandlePunishByRoleIdSQLString);
+            }
         }
 
         public static bool IsSuccessReturnBook(int bookId)
