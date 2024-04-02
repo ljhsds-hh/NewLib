@@ -1,4 +1,4 @@
-﻿
+
 using LibrarySystemForClient.Ljh.Windows;
 using MaterialDesignThemes.Wpf;
 using System;
@@ -64,6 +64,36 @@ namespace LibrarySystemForClient.Ljh.Utils
             bitmapImage.EndInit();
             ms.Seek(0, SeekOrigin.Begin);
             return bitmapImage;
+        }
+
+        public static bool IsNeedHandlerNoExistBorrowInfo(int bookId)
+        {
+            string IsExistBookByIdSQLString = "select count(bi_id) from ls_bookinfo where bi_id = " + bookId + ";";
+            int IsExistBookByIdRes = SQLUtil.CountSQL(IsExistBookByIdSQLString);
+            if (IsExistBookByIdRes == 0)
+            {
+               MessageBoxResult OverTimeReturn = MessageBox.Show("非常抱歉，，此书已下架无法续借！！！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+               return true;
+                
+            }
+            return false;
+        }
+
+        public static string GetAddString(List<int> dataList)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("( ");
+            for(int i = 0; i < dataList.Count; i++)
+            {
+                
+                sb.Append(dataList[i]);
+                if (i != (dataList.Count - 1))
+                {
+                    sb.Append(",");
+                }
+            }
+            sb.Append(" )");
+            return sb.ToString();
         }
     }
 }
