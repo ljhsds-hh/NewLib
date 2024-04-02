@@ -24,24 +24,34 @@ namespace LibrarySystemForClient.Ljh.Pages
     public partial class ManageBookInfo : Page
     {
 
-        private List<ManageBookViewModel> manageBookViewModels;
-        public static int CheckTrueNum = 0;
+        public List<ManageBookViewModel> manageBookViewModels;
+        public int CheckTrueNum = 0;
         public ManageBookInfo()
         {
             InitializeComponent();
-            InitDataGrid(1,12);
+            InitDataGrid(1, 12);
         }
 
-        public void InitDataGrid(int PageNum,int PageSize)
+        public void InitDataGrid(int PageNum, int PageSize)
         {
-            string SelectBookInfoSQLString = "SELECT bi_id, bi_name, bt_id, bi_press, bi_isbn, bi_author, bi_location, bi_price, bi_pages, bi_addtime, bi_num, bi_cover_picture FROM ls_bookinfo limit "+PageSize+" offset "+(PageNum-1)*PageSize+";";
+            string SelectBookInfoSQLString = "SELECT bi_id, bi_name, bt_id, bi_press, bi_isbn, bi_author, bi_location, bi_price, bi_pages, bi_addtime, bi_num, bi_cover_picture FROM ls_bookinfo limit " + PageSize + " offset " + (PageNum - 1) * PageSize + ";";
             manageBookViewModels = SQLUtil.SelectManageBookViewModelByPage(SelectBookInfoSQLString);
             ManageBookInfoDataGrid.ItemsSource = manageBookViewModels;
         }
 
-      
+
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+            var dataContent = button.DataContext as ManageBookViewModel;
+            int bookId = dataContent.Id;
+            string DeleteRowDateSQLString = "delete from ls_bookinfo where bi_id = " + bookId + " ;";
+            int deleteRes = SQLUtil.NoQuerySQL(DeleteRowDateSQLString);
+            if (deleteRes == 1)
+            {
+                MessageBoxResult result = MessageBox.Show("已删除！！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+            }
+            InitDataGrid(1, 12);
 
         }
         private void Update_Click(object sender, RoutedEventArgs e)
@@ -62,7 +72,9 @@ namespace LibrarySystemForClient.Ljh.Pages
         {
 
             CheckBox check = (CheckBox)sender;
+            ManageBookViewModel temporary = check.DataContext as ManageBookViewModel;
             bool value = check.IsChecked.Value;
+            manageBookViewModels[temporary.Index].CheckBoxValue = value;
             if (value)
             {
                 CheckTrueNum++;
@@ -84,7 +96,7 @@ namespace LibrarySystemForClient.Ljh.Pages
 
         private void SetCheckBoxAll(bool value)
         {
-            for(int i = 0; i < manageBookViewModels.Count; i++)
+            for (int i = 0; i < manageBookViewModels.Count; i++)
             {
                 manageBookViewModels[i].CheckBoxValue = value;
             }
