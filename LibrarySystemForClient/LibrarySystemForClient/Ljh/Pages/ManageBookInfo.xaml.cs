@@ -1,6 +1,7 @@
 using LibrarySystemForClient.Ljh.Model;
 using LibrarySystemForClient.Ljh.Utils;
 using LibrarySystemForClient.Ljh.ViewModel;
+using LibrarySystemForClient.Ljh.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,17 +27,50 @@ namespace LibrarySystemForClient.Ljh.Pages
 
         public List<ManageBookViewModel> manageBookViewModels;
         public int CheckTrueNum = 0;
+        public string ValueOne = "";
+        public string ValueTwo = "";
+
+        public int PageNum = 1;
+        public int PageSize = 12;
+
         public ManageBookInfo()
         {
             InitializeComponent();
-            InitDataGrid(1, 12);
+            InitDataGrid();
         }
 
-        public void InitDataGrid(int PageNum, int PageSize)
+        public void InitDataGrid()
         {
-            string SelectBookInfoSQLString = "SELECT bi_id, bi_name, bt_id, bi_press, bi_isbn, bi_author, bi_location, bi_price, bi_pages, bi_addtime, bi_num, bi_cover_picture FROM ls_bookinfo limit " + PageSize + " offset " + (PageNum - 1) * PageSize + ";";
+            string CountBook = "";
+            int bookTotal = 0;
+            string SelectBookInfoSQLString = "";
+            string whereCondition = "";
+            if (!ValueOne.Equals("") || !ValueTwo.Equals(""))       
+            {
+                
+                if (!ValueOne.Equals("") && !ValueTwo.Equals(""))
+                {
+                    whereCondition = "where bi_id = " + ValueOne + " or bi_name like '%" + ValueTwo + "%' ";
+                    
+                }else if (ValueOne.Equals(""))
+                {
+                    whereCondition = "where  bi_name like '%" + ValueTwo + "%' ";
+                }
+                else
+                {
+                    whereCondition = "where  bi_id = " + ValueOne + " ";
+                }
+            }
+            SelectBookInfoSQLString = "SELECT bi_id, bi_name, bt_id, bi_press, bi_isbn, bi_author, bi_location, bi_price, bi_pages, bi_addtime, bi_num, bi_cover_picture FROM ls_bookinfo " + whereCondition + " limit " + PageSize + " offset " + (PageNum - 1) * PageSize + ";";
+            CountBook = "select count(bi_id) from ls_bookinfo " + whereCondition + ";";
             manageBookViewModels = SQLUtil.SelectManageBookViewModelByPage(SelectBookInfoSQLString);
+            bookTotal = SQLUtil.CountSQL(CountBook);
+            int PageTotal = bookTotal % PageSize == 0 ? bookTotal / PageSize : (bookTotal / PageSize + 1);
+            MainBook CurrentWindows = Application.Current.Windows.OfType<MainBook>().FirstOrDefault();
+            CurrentWindows.bookTotal = bookTotal;
+            CurrentWindows.pageTotal = PageTotal;
             ManageBookInfoDataGrid.ItemsSource = manageBookViewModels;
+
         }
 
 
@@ -51,7 +85,7 @@ namespace LibrarySystemForClient.Ljh.Pages
             {
                 MessageBoxResult result = MessageBox.Show("已删除！！", "提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
             }
-            InitDataGrid(1, 12);
+            InitDataGrid();
 
         }
         private void Update_Click(object sender, RoutedEventArgs e)
