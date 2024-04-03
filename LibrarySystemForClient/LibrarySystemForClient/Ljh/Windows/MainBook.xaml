@@ -41,14 +41,14 @@
                         Width="200"
                         Margin="128,0,0,0"
                         VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="请输入图书名称"
+                        materialDesign:HintAssist.Hint="请输入图书ID"
                         />
                         <TextBox
                             x:Name="TextTwo"
                         Width="200"
                         Margin="50,0,30,0"
                         VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="请输入图书ISB码"
+                        materialDesign:HintAssist.Hint="请输入图书名称"
                         />
                         <Button
                             x:Name="SourceAllInfo"
@@ -268,6 +268,38 @@
                 <Grid Grid.Row="1">
                     <Border BorderBrush="DarkGray"
                     BorderThickness="0,1,0,0"  Margin="30,0,30,0"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox
+                        x:Name="MainPageNum"
+                        Width="50"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="页码"
+                        />
+                        <TextBox
+                        x:Name="MainPageSize"
+                        Width="70"
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Center"
+                            Text="{Binding MianPageSize}"
+                        materialDesign:HintAssist.Hint="~条/页"
+                        />
+                        <TextBox IsReadOnly="True"
+                        x:Name="MainPageTotal"
+                        Width="70"
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Center"
+                            Text="总计 条"
+                        />
+                        <TextBox IsReadOnly="True"
+                        x:Name="MainPageTotalSize"
+                        Width="70"
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Center"
+                            Text="总计 页"
+                        />
+                        <Button x:Name="ToPageNum" Margin="100 0 0 0" Content="Button" Height="30" Width="99" Click="ToPageNum_Click"/>
+                    </StackPanel>
                 </Grid>
             </Grid>
 
