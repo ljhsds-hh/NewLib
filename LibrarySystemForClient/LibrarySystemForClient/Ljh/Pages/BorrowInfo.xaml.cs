@@ -23,10 +23,16 @@ namespace LibrarySystemForClient.Ljh.Pages
     /// </summary>
     public partial class BorrowInfo : Page
     {
+
+        public string ValueOne = "";
+        public string ValueTwo = "";
+
+        public int PageNum = 1;
+        public int PageSize = 12;
         public BorrowInfo()
         {
             InitializeComponent();
-            InitDataGrid(1, 12);
+            InitDataGrid();
         }
 
         private void BorrowBook_Click(object sender, RoutedEventArgs e)
@@ -59,9 +65,35 @@ namespace LibrarySystemForClient.Ljh.Pages
 
         }
 
-        public void InitDataGrid(int PageNum, int PageSize)
+        public void InitDataGrid()
         {
-            string SelectReborrowBookInfoSQLString = "SELECT bi_id, bi_name, bt_name, bi_press, bi_isbn, bi_author, bi_location, bi_price, bi_pages,bi_num FROM ls_bookinfo as t1 LEFT JOIN ls_booktype as t2 on t1.bt_id = t2.bt_id where bi_num > 0 order by bi_id limit " + PageSize + " offset " + (PageNum - 1) * PageSize + " ;";
+            string CountBorrow = "";
+            int borrowTotal = 0;
+            string SelectReborrowBookInfoSQLString = "";
+            string whereCondition = "";
+            if(!ValueOne.Equals("") || !ValueTwo.Equals(""))
+            {
+                if (!ValueOne.Equals("") && !ValueTwo.Equals(""))
+                {
+                    whereCondition = "and ( bi_id = " + ValueOne + " or bi_name like '%" + ValueTwo + "%' )";
+
+                }
+                else if (ValueOne.Equals(""))
+                {
+                    whereCondition = "and  bi_name like '%" + ValueTwo + "%' ";
+                }
+                else
+                {
+                    whereCondition = "and  bi_id = " + ValueOne + " ";
+                }
+            }
+            SelectReborrowBookInfoSQLString = "SELECT bi_id, bi_name, bt_name, bi_press, bi_isbn, bi_author, bi_location, bi_price, bi_pages,bi_num FROM ls_bookinfo as t1 LEFT JOIN ls_booktype as t2 on t1.bt_id = t2.bt_id where bi_num > 0 " + whereCondition + " order by bi_id limit " + PageSize + " offset " + (PageNum - 1) * PageSize + " ;";
+            CountBorrow = "select count(bi_id) from ls_bookinfo as t1 LEFT JOIN ls_booktype as t2 on t1.bt_id = t2.bt_id where bi_num > 0  " + whereCondition + ";";
+            borrowTotal = SQLUtil.CountSQL(CountBorrow);
+            int PageTotal = borrowTotal % PageSize == 0 ? borrowTotal / PageSize : (borrowTotal / PageSize + 1);
+            MainBook CurrentWindows = Application.Current.Windows.OfType<MainBook>().FirstOrDefault();
+            CurrentWindows.bookTotal = borrowTotal;
+            CurrentWindows.pageTotal = PageTotal;
             ReborrowBookData.ItemsSource = SQLUtil.SelectBookInfoByPage(SelectReborrowBookInfoSQLString);
         }
     }
