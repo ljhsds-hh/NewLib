@@ -114,7 +114,7 @@ namespace LibrarySystemForClient.Ljh.Utils
                 {
                     Book book = new Book();
                     book.Id = reader.GetInt32(0);
-                    book.BookName = reader.GetString(reader.GetOrdinal("bi_id"));
+                    book.BookName = reader.GetString(1);
                     book.BookType = reader.GetString(2);
                     book.BookPress = reader.GetString(3);
                     book.BookISBN = reader.GetString(4);
