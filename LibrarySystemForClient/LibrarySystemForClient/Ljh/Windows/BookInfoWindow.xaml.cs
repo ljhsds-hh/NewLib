@@ -1,4 +1,4 @@
-﻿using LibrarySystemForClient.Ljh.Pages;
+using LibrarySystemForClient.Ljh.Pages;
 using LibrarySystemForClient.Ljh.Utils;
 using System;
 using System.Collections.Generic;
@@ -42,11 +42,7 @@ namespace LibrarySystemForClient.Ljh.Windows
             else
             {
                 BorrowBookUtil.BorrowBookFun(NewDateTime, this, bookId);
-            }
-            //string UpdateBookInfoSQL = "update ls_bookinfo set bi_num = bi_num - 1 where bi_id = " + bookId+";";
-            //int UpdateBookInfoRes = SQLUtil.NoQuerySQL(UpdateBookInfoSQL);
-            
-            
+            }             
                 
         }
 
