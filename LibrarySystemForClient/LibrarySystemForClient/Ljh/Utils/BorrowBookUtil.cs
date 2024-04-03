@@ -109,7 +109,7 @@ namespace LibrarySystemForClient.Ljh.Utils
                             MainBook CurrentWindows = Application.Current.Windows.OfType<MainBook>().FirstOrDefault();
                             if (CurrentWindows.mainFrame.Content is BorrowInfo borrowInfo)
                             {
-                                borrowInfo.InitDataGrid(1, 12);
+                                borrowInfo.InitDataGrid();
                             }
                         }
                     }
